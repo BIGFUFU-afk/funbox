@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FUNBOX 戰鬥陀螺抽選</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f6f8;color:#17202a;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif}
+header{background:#111;color:#fff;padding:18px 16px;position:sticky;top:0;z-index:10}
+header h1{font-size:21px;margin:0 0 5px}header p{margin:0;color:#bbb;font-size:13px}
+main{max-width:760px;margin:auto;padding:12px}
+.tools{background:#fff;padding:12px;border-radius:15px;margin-bottom:12px;box-shadow:0 1px 5px #00000010}
+input{width:100%;font-size:16px;padding:12px;border:1px solid #ddd;border-radius:12px}
+.tabs{display:flex;gap:7px;margin-top:9px;overflow:auto}button.tab{border:0;border-radius:20px;padding:8px 13px;white-space:nowrap;background:#e9edf1}
+button.tab.on{background:#111;color:#fff}
+.card{background:#fff;border-radius:16px;margin:0 0 12px;overflow:hidden;box-shadow:0 1px 5px #00000012}
+.head{padding:14px;border-bottom:1px solid #eee}
+.head h2{font-size:19px;margin:0 0 7px}.meta{font-size:13px;color:#68717a}
+.voom{display:inline-block;margin-top:8px;color:#06c;text-decoration:none;font-weight:650}
+.item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:13px 14px;border-bottom:1px solid #eee}
+.item:last-child{border-bottom:0}.name{font-weight:650;line-height:1.4}.raw{font-size:11px;color:#78828c;word-break:break-all;margin-top:4px}
+.go{background:#06c755;color:white;text-decoration:none;padding:10px 13px;border-radius:11px;font-weight:750;white-space:nowrap}
+.empty{text-align:center;padding:40px;color:#777}.count{font-size:13px;color:#666;margin-top:8px}
+.note{font-size:12px;color:#777;padding:5px 3px 20px;line-height:1.5}
+</style>
+</head>
+<body>
+<header><h1>🔥 FUNBOX 戰鬥陀螺抽選</h1><p>2026/09/18 最新一輪｜單頁快速抽選</p></header>
+<main>
+<div class="tools">
+<input id="q" placeholder="搜尋店家或商品，例如：魔導神杖">
+<div class="tabs">
+<button class="tab on" data-r="全部">全部</button>
+<button class="tab" data-r="北部">北部</button>
+<button class="tab" data-r="新竹">新竹</button>
+<button class="tab" data-r="宜蘭">宜蘭</button>
+</div>
+<div class="count" id="count"></div>
+</div>
+<div id="app"></div>
+<div class="note">只顯示 JSON 中能辨識到 2026/09/18 最新一輪抽選的店家；沒有 9/18 新貼文的店家不混入 9/11、9/4 舊抽選。點「LINE VOOM」可回原貼文核對。</div>
+</main>
+<script>
+const stores=[{"store": "Funbox-桃園遠東店", "voom": "https://linevoom.line.me/user/_dZCpDMgUi2_f6JEnQze2nP22nJV-G1o8rHLmpFE", "products": [{"name": "CX-00 迪卡狂怒 FT3-60T", "url": "https://lin.ee/Qn9WPd0"}, {"name": "UX-03 魔導神杖", "url": "https://lin.ee/RFWCayf"}, {"name": "BX-00 蒼龍神劍3-60FV2", "url": "https://lin.ee/WKxlHyf"}, {"name": "BXG-01 烈焰飛鳳S", "url": "https://lin.ee/sYT1iVe"}, {"name": "UX-20 榮耀武神LF", "url": "https://lin.ee/TzuPHYf"}, {"name": "BX-26 獨角刺心", "url": "https://lin.ee/SZRC5E3"}, {"name": "CX-13 龍王閃擊", "url": "https://lin.ee/pmXbX5T"}, {"name": "BXG-04 銀牙烈虎S", "url": "https://lin.ee/W8uRUIp"}, {"name": "BX-00 暴風天馬3-70RA", "url": "https://lin.ee/VvErQRM"}], "region": "北部"}, {"store": "Funbox 宜蘭新月店", "voom": "https://linevoom.line.me/user/_dTS4fzrnBtUOuG-T_J22hfcZSdxunoOsypVfgRg", "products": [{"name": "BXG-01 烈焰飛鳳S", "url": "https://lin.ee/5uQLiVnm"}, {"name": "BX-26 獨角刺心", "url": "https://lin.ee/WGt5XOw"}, {"name": "UX-03 魔導神杖", "url": "https://lin.ee/tA0txUd"}, {"name": "BXG-04 銀牙烈虎S", "url": "https://lin.ee/txQX8uD"}, {"name": "BX-33 皓戰猛虎", "url": "https://lin.ee/5zhPuQv"}, {"name": "BX-00 蒼龍神劍3-60F V2", "url": "https://lin.ee/ZrBRZSy"}, {"name": "CX-00 迪卡狂怒 FT3-60T", "url": "https://lin.ee/wU15nby"}], "region": "宜蘭"}, {"store": "funbox 享平方店", "voom": "https://linevoom.line.me/user/_dfuDiJPQBJn4ih1iarevDIEIB9XvR-_q44VI6bE", "products": [{"name": "UX-03 魔導神杖", "url": "https://lin.ee/QYXC2jO"}, {"name": "CX-00 超人迪加", "url": "https://lin.ee/5oDWBbG"}, {"name": "UX-21 惡魔幽冥改造組", "url": "https://lin.ee/n7vHmJn"}, {"name": "BXG-01 烈焰飛鳳S", "url": "https://lin.ee/WmJoUS8"}, {"name": "BX-00 暴風天馬3 7-70RA", "url": "https://lin.ee/PIGl57D"}, {"name": "BX-00 蒼龍神劍3-60F", "url": "https://lin.ee/8L5bEuT"}], "region": "北部"}, {"store": "Funbox-新竹遠東店", "voom": "https://linevoom.line.me/user/_dYjgWm0vwMyoPEcmLUOBhOQ55A0WaB7EuLfW5Mw", "products": [{"name": "CX-00 迪卡狂怒 FT3-60T", "url": "https://lin.ee/RFFjwHr"}, {"name": "UX-03 魔導神杖", "url": "https://lin.ee/PyQg7Mf"}], "region": "新竹"}, {"store": "Funbox-信義A8店(陀螺販售)", "voom": "https://linevoom.line.me/user/_dfItqTWWpJgcZPNYg_b3_xlBeXDhlwTDTicnfSU", "products": [{"name": "CX-18 腕龍鞭打 隨機強化組", "url": "https://lin.ee/9IMX8Cir"}, {"name": "CX-00 迪卡狂怒 FT3-60T", "url": "https://lin.ee/ZrPAPe8"}, {"name": "BX-00 蒼龍神劍3-60F V2", "url": "https://lin.ee/sbnjL6d"}, {"name": "UX-03 魔導神杖", "url": "https://lin.ee/rbHSRp2q"}], "region": "北部"}, {"store": "Funbox 美麗華", "voom": "https://linevoom.line.me/user/_dS6PecGuAayr8FMQ6NoCcETN1oXZ0zgwun4Uivc", "products": [{"name": "UX-03 魔導神杖", "url": "https://lin.ee/tTVZJiL"}, {"name": "CX-00 迪卡狂怒", "url": "https://lin.ee/noJHrDS"}], "region": "北部"}, {"store": "Funbox板橋大遠百", "voom": "https://linevoom.line.me/user/_dblyPGfsKpebVOKvBaP8gs72hysvg-G0EVYLyv4", "products": [{"name": "CX-12 鳳凰閃焰", "url": "https://lin.ee/Vgc1u0M"}, {"name": "UX-03 魔導神杖", "url": "https://lin.ee/yp47UCf"}, {"name": "CX-00 迪卡狂怒 FT3-60T", "url": "https://lin.ee/U2hE9eB"}, {"name": "UX-21 惡魔冥界改造組", "url": "https://lin.ee/Q2usF7Y"}, {"name": "CX-00 新世紀福音戰士改造組", "url": "https://lin.ee/nwZ8UAn"}, {"name": "CX-13 龍王閃擊", "url": "https://lin.ee/wzZcF5u"}], "region": "北部"}, {"store": "FunBox - 中壢SOGO店", "voom": "https://linevoom.line.me/user/_dcSEo3ibPOyoQAAsta4srlSCIdiLnKQqsbk8mog", "products": [{"name": "UX-19 子彈獅鷲H", "url": "https://lin.ee/68jIvcY"}, {"name": "UX-21 惡魔冥界改造組", "url": "https://lin.ee/9kqVmv3"}, {"name": "UX-03 魔導神杖", "url": "https://lin.ee/NP6wjd0"}, {"name": "UX-11 衝擊龍神 豪華組", "url": "https://lin.ee/ZQgrwW5"}, {"name": "BX-00 蒼龍神劍3-60F V2", "url": "https://lin.ee/oPx0YWn"}, {"name": "BX-26 獨角刺心", "url": "https://lin.ee/UecO5Du"}, {"name": "BXG-01 烈焰飛鳳S", "url": "https://lin.ee/851hjYK"}, {"name": "BXG-04 銀牙烈虎S", "url": "https://lin.ee/6xLaFEs"}, {"name": "BX-35 隨機強化組Vol.04", "url": "https://lin.ee/89JXSDd"}, {"name": "BX-33 皓戰猛虎", "url": "https://lin.ee/5uBUsDH"}, {"name": "BX-00 暴風天馬3-70RA", "url": "https://lin.ee/qc4hLTW"}, {"name": "CX-00 新世紀福音戰士改造組", "url": "https://lin.ee/QvuW1bl"}, {"name": "CX-00 迪卡狂怒 FT3-60T", "url": "https://lin.ee/riNVSiN"}], "region": "北部"}, {"store": "Funbox 三越站前店", "voom": "https://linevoom.line.me/user/_dTQ_Ar8kG3TZeWoB_i2PtLW_TclZiMtldppUzAQ", "products": [{"name": "CX-00 迪卡狂怒 FT3-60T", "url": "https://lin.ee/zgLeRGS"}, {"name": "UX-03 魔導神杖", "url": "https://lin.ee/p46IHRb"}], "region": "北部"}, {"store": "Funbox 遠百信義A13", "voom": "https://linevoom.line.me/user/_dZWTe6za3_22gXVkl46uAq37zC6nwkQQCwZnBoA", "products": [{"name": "CX-00 迪卡狂怒 FT3-60T", "url": "https://lin.ee/5hnrhfF"}, {"name": "UX-03 魔導神杖", "url": "https://lin.ee/80jAHA5"}, {"name": "BX-37 雙重極限衝擊戰鬥盤 豪華組", "url": "https://lin.ee/st7PKoI"}], "region": "北部"}, {"store": "Funbox天母三越店", "voom": "https://linevoom.line.me/user/_dXYFKzVX-ldfgeUOor_McfFTE_yJP7d54nPjxpQ", "products": [{"name": "BXG-04 銀牙烈虎S", "url": "https://lin.ee/uTwQ0En"}, {"name": "BX-00 蒼龍神劍V2", "url": "https://lin.ee/vsXielf"}, {"name": "CX-13 龍王閃擊", "url": "https://lin.ee/PzT3ecL"}, {"name": "UX-03 魔導神杖", "url": "https://lin.ee/PynNzeo"}, {"name": "CX-00 迪卡狂怒", "url": "https://lin.ee/vuWaB0z"}], "region": "北部"}, {"store": "Funbox淡水禮萊廣場店", "voom": "https://linevoom.line.me/user/_dU6uuJLZc-sttPrdL6hfb8pOoMDCcgdNWEtYPKA", "products": [{"name": "BX-00 蒼龍神劍3-60F V2", "url": "https://lin.ee/PErnTWvU"}, {"name": "CX-00 迪卡狂怒 FT3-60T", "url": "https://lin.ee/sZ7mGJW"}, {"name": "UX-03 魔導神杖", "url": "https://lin.ee/ZHWigPTB"}], "region": "北部"}, {"store": "Funbox 天母SOGO店", "voom": "https://linevoom.line.me/user/_db3MM1gifrvefmBbBLPWOhPAw0aPUL9K3IvLDTk", "products": [{"name": "BX-00 蒼龍神劍3-60F V2", "url": "https://lin.ee/Y4bYfvZ"}, {"name": "UX-03 魔導神杖", "url": "https://lin.ee/70SyxXas"}, {"name": "CX-00 迪卡狂怒 FT3-60T", "url": "https://lin.ee/rYMEV3d"}], "region": "北部"}, {"store": "FUNBOX 比漾廣場店", "voom": "https://linevoom.line.me/user/_dQbxr4jKpXDT3BtXULflBCgU9GujoUvNaAUOOZo", "products": [{"name": "CX-00 迪卡狂怒 FT3-60T", "url": "https://lin.ee/nvadCd1"}, {"name": "UX-03 魔導神杖", "url": "https://lin.ee/6KCLnPo"}], "region": "北部"}, {"store": "Fun box忠孝SOGO", "voom": "https://linevoom.line.me/user/_dZR3EbkBX6ugUrxVH_Qo47n8xYDp-95FYmhlIWM", "products": [{"name": "CX-00 迪卡狂怒 FT3-60T", "url": "https://lin.ee/njAFauO"}, {"name": "BX-00 蒼龍神劍", "url": "https://lin.ee/Uug2Iq3"}, {"name": "UX-03 魔導神杖", "url": "https://lin.ee/5BdORQN"}, {"name": "BX-37 雙重極限衝擊戰鬥盤 豪華組 (不能來結帳不要來抽這款)", "url": "https://lin.ee/T7t1SBN"}], "region": "北部"}];
+let region="全部";
+const app=document.getElementById("app"), q=document.getElementById("q"), count=document.getElementById("count");
+function esc(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function render(){
+ const key=q.value.trim().toLowerCase();
+ const rows=stores.filter(s=>(region==="全部"||s.region===region)&&(!key||(s.store+" "+s.products.map(p=>p.name).join(" ")).toLowerCase().includes(key)));
+ count.textContent=`顯示 ${rows.length} 間店｜${rows.reduce((n,s)=>n+s.products.length,0)} 個抽選商品`;
+ app.innerHTML=rows.length?rows.map(s=>`<section class="card">
+ <div class="head"><h2>${esc(s.store)}</h2><div class="meta">${esc(s.region)}｜本輪 ${s.products.length} 項</div>
+ <a class="voom" href="${s.voom}">查看 LINE VOOM 原貼文 ↗</a></div>
+ ${s.products.map(p=>`<div class="item"><div><div class="name">${esc(p.name)}</div><div class="raw">${esc(p.url)}</div></div>${p.url?`<a class="go" href="${p.url}">立即抽選</a>`:""}</div>`).join("")}
+ </section>`).join(""):'<div class="empty">沒有符合的店家／商品</div>';
+}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));b.classList.add("on");region=b.dataset.r;render()});
+q.addEventListener("input",render);render();
+</script>
+</body></html>
